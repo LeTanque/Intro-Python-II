@@ -1,43 +1,40 @@
-from room import Room
-
+from cave import Cave
+from player import Player
 
 # Declare all the rooms
-room = {
-    'outside':  Room("Outside Cave Entrance",
+cave = {
+    'outside':  Cave("Outside Cave Entrance",
                      "North of you, the cave mount beckons"),
 
-    'foyer':    Room("Foyer", """Dim light filters in from the south. Dusty
+    'foyer':    Cave("Foyer", """Dim light filters in from the south. Dusty
 passages run north and east."""),
 
-    'overlook': Room("Grand Overlook", """A steep cliff appears before you, falling
+    'overlook': Cave("Grand Overlook", """A steep cliff appears before you, falling
 into the darkness. Ahead to the north, a light flickers in
 the distance, but there is no way across the chasm."""),
 
-    'narrow':   Room("Narrow Passage", """The narrow passage bends here from west
+    'narrow':   Cave("Narrow Passage", """The narrow passage bends here from west
 to north. The smell of gold permeates the air."""),
 
-    'treasure': Room("Treasure Chamber", """You've found the long-lost treasure
+    'treasure': Cave("Treasure Chamber", """You've found the long-lost treasure
 chamber! Sadly, it has already been completely emptied by
 earlier adventurers. The only exit is to the south."""),
 }
 
-
 # Link rooms together
-room['outside'].n_to = room['foyer']
-room['foyer'].s_to = room['outside']
-room['foyer'].n_to = room['overlook']
-room['foyer'].e_to = room['narrow']
-room['overlook'].s_to = room['foyer']
-room['narrow'].w_to = room['foyer']
-room['narrow'].n_to = room['treasure']
-room['treasure'].s_to = room['narrow']
+cave['outside'].north_to = cave['foyer']
+cave['foyer'].south_to = cave['outside']
+cave['foyer'].north_to = cave['overlook']
+cave['foyer'].east_to = cave['narrow']
+cave['overlook'].south_to = cave['foyer']
+cave['narrow'].west_to = cave['foyer']
+cave['narrow'].north_to = cave['treasure']
+cave['treasure'].south_to = cave['narrow']
 
 #
 # Main
 #
-
-# Make a new player object that is currently in the 'outside' room.
-
+# Player starts outside of cave entrance
 # Write a loop that:
 #
 # * Prints the current room name
@@ -48,3 +45,22 @@ room['treasure'].s_to = room['narrow']
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
+
+# Player name input
+player = Player(input("What's your name? "), cave["outside"])
+print(player.current_room)
+
+# Possible directions
+directions = ["north", "south", "east", "west"]
+
+# This is a basic REPL loop
+while True:
+    # input to lowercase, prepended with >>>
+    cmd = input(") input command >>> ").lower()
+    if cmd in directions:
+        player.travel(cmd)
+    elif cmd == "q":        # q quits the game
+        print("Thanks for playing!")
+        exit()
+    else:
+        print("Please input north, south, east, west, or q")
